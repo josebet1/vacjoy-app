@@ -1,65 +1,54 @@
+import * as React from 'react';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import Card from "../components/Card";
+import { Select, MenuItem } from '@material-ui/core';
+import Table from "../components/Table";
 
-export default function Home() {
+function Home({ sites }) {
+  const [loading, setLoading] = React.useState(true);
+  const [data, setData] = React.useState(0);
+  const [age, setAge] = React.useState('');
+
+  // React.useEffect(() => {
+  //   (async () => {
+  //     const res = await fetch('https://vacjoy.jose.workers.dev/fusion');
+  //     const json = await res.json();
+  //     setData(json);
+  //     setLoading(false);
+  //   })();
+  // }, []);
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
+    <div>
+      <h1>Helo welcome to the internet</h1>
+      <hr />
+      <Table data={sites} />
+      <Select sites=
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={age}
+        onChange={(evt) => setAge(evt.target.value)}
+      >
+        {
+          sites.map((x) => <MenuItem key={x.id} value={x.city}>{x.city}</MenuItem>)
+        }
+        <MenuItem value={1}>Ten</MenuItem>
+        <MenuItem value={2}>Twenty</MenuItem>
+        <MenuItem value={3}>Thirty</MenuItem>
+      </Select>
+      {sites.filter((x) => x.city === age).map((x) => <Card key={x.id} site={x}/>)}
     </div>
   )
+
+  // return  <div>Next stars: {JSON.stringify(json)}</div>
 }
+
+Home.getInitialProps = async (ctx) => {
+  const res = await fetch('https://vacjoy.jose.workers.dev/fusion');
+  const sites = (await res.json()).data;
+  return { sites };
+}
+
+export default Home
